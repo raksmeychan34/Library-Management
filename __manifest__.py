@@ -5,7 +5,7 @@
     'description': """
         A simple library/book management module for internal learning purposes.
     """,
-    'author': "Hada",
+    'author': "Raksmey",
     'license': "LGPL-3",
     'category': 'Productivity',
     'depends': ['base'],    
