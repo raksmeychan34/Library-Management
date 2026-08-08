@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_library_book_all,library.book.all,model_library_book,,1,1,1,1
-access_library_borrow_wizard_all,library.borrow.wizard.all,model_library_borrow_wizard,,1,1,1,1
+access_library_book_librarian,library.book.librarian,model_library_book,group_library_librarian,1,1,1,1
+access_library_book_reader,library.book.reader,model_library_book,group_library_reader,1,0,0,0
+access_library_borrow_wizard_librarian,library.borrow.wizard.librarian,model_library_borrow_wizard,group_library_librarian,1,1,1,1
+access_library_borrow_wizard_reader,library.borrow.wizard.reader,model_library_borrow_wizard,group_library_reader,1,1,1,1

@@ -15,6 +15,7 @@
                     decoration-warning="state == 'borrowed'"
                     decoration-info="state == 'returned'"/>
                 <field name="is_overdue" invisible="1"/>
+                <field name="borrower_id"/>
             </list>
         </field>
     </record>
@@ -42,6 +43,7 @@
                         <field name="description"/>
                         <field name="loan_period_days"/>
                         <field name="is_overdue"/>
+                        <field name="borrower_id"/>
                     </group>
                 </sheet>
             </form>

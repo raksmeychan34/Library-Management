@@ -1,8 +1,13 @@
 from odoo import models, fields
 
-
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+
+    book_ids = fields.One2many(
+        'library.book',
+        'borrower_id',
+        string='Books'
+    )
 
     borrowed_book_count = fields.Integer(
         string="Borrowed Books",
@@ -11,7 +16,8 @@ class ResPartner(models.Model):
 
     def _compute_borrowed_book_count(self):
         for partner in self:
-            partner.borrowed_book_count = self.env['library.book'].search_count([
-                ('borrower_id', '=', partner.id),
-                ('state', '=', 'borrowed'),
-            ])
+            partner.borrowed_book_count = len(
+                partner.book_ids.filtered(
+                    lambda b: b.state == 'borrowed'
+                )
+            )

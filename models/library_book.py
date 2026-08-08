@@ -56,15 +56,26 @@ class LibraryBook(models.Model):
                 book.is_overdue = False
 
     def action_borrow(self, borrower_id=None):
+        is_librarian = self.env.user.has_group('library_management.group_library_librarian')
         for book in self:
             if book.state == 'borrowed':
                 raise UserError(f"'{book.name}' is already borrowed.")
-            book.state = 'borrowed'
-            book.borrower_id = borrower_id
-            book.borrow_date = fields.Date.today()
+            if not is_librarian and borrower_id != self.env.user.partner_id.id:
+                raise UserError("You can only borrow books for yourself.")
+            book.sudo().write({
+                'state': 'borrowed',
+                'borrower_id': borrower_id,
+                'borrow_date': fields.Date.today(),
+            })
+            
 
     def action_return(self):
+        is_librarian =self.env.user.has_group('library_management.group_library_librarian')
         for book in self:
-            book.state = 'returned'
-            book.return_date = fields.Date.today()
-            book.borrower_id = False
+            if not is_librarian and book.borrower_id.id != self.env.user.partner_id.id:
+                raise UserError("You can only return books you've borrowed yourself.")
+            book.sudo().write({
+                'state': 'returned',
+                'return_date': fields.Date.today(),
+                'borrower_id': False,
+            })
