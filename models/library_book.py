@@ -7,12 +7,12 @@ class LibraryBook(models.Model):
     _name = 'library.book'
     _description = 'Library Book'
 
-    _isbn_unique = models.Constraint(
+    _isbn_unique = models.Constraint(       #database-level rule enforced by Postgres
     'unique(isbn)',
     'ISBN must be unique — this book already exists!',
     )
 
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True)    #automatically wires up Archive/Unarchive in the Actions menu
 
     name = fields.Char(string="Title", required=True)
     author = fields.Char(string="Author")
@@ -37,16 +37,20 @@ class LibraryBook(models.Model):
     return_date = fields.Date(string="Return Date")
 
     loan_period_days = fields.Integer(string="Loan Period (days)", default=14)
-    is_overdue = fields.Boolean(string="Overdue", compute='_compute_is_overdue')
+    is_overdue = fields.Boolean(
+    string="Overdue",
+    compute="_compute_is_overdue",
+    store=True,
+    )
 
-    @api.constrains('publish_date')
+    @api.constrains('publish_date')      #Runs auto field changes; raises to block bad data
     def _check_publish_date(self):
         for book in self:
             if book.publish_date and book.publish_date > fields.Date.today():
-                raise ValidationError("Publish date cannot be in the future.")
+                raise ValidationError("Publish date cannot be in the future.")       #blocks bad data
 
-    @api.depends('state', 'borrow_date', 'loan_period_days')
-    def _compute_is_overdue(self):
+    @api.depends('state', 'borrow_date', 'loan_period_days')    #tells Odoo which fields trigger recalculation
+    def _compute_is_overdue(self):              #Marks a field as calculated
         today = fields.Date.today()
         for book in self:
             if book.state == 'borrowed' and book.borrow_date:

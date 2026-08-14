@@ -1,0 +1,49 @@
+<odoo>
+    <template id="report_borrow_slip_document">   <!-- report template for the borrow slip -->
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">  <!-- Loop through each document -->
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <h2>Borrow Slip</h2>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Book:</strong></td>
+                                <td><span t-esc="doc.name"/></td>  <!-- output this value as escaped text -->
+                            </tr>
+                            <tr>
+                                <td><strong>Author:</strong></td>
+                                <td><span t-esc="doc.author"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Borrower:</strong></td>
+                                <td><span t-esc="doc.borrower_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Borrow Date:</strong></td>
+                                <td><span t-esc="doc.borrow_date"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Loan Period:</strong></td>
+                                <td><span t-esc="doc.loan_period_days"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status:</strong></td>
+                                <td><span t-esc="doc.state"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_borrow_slip" model="ir.actions.report">
+        <field name="name">Borrow Slip</field>
+        <field name="model">library.book</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">library_management.report_borrow_slip_document</field>
+        <field name="report_file">library_management.report_borrow_slip_document</field>
+        <field name="binding_model_id" ref="model_library_book"/>  <!--Actions-menu trick-->
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

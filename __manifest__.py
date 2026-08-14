@@ -16,6 +16,7 @@
         'views/library_borrow_wizard_views.xml',
         'views/library_book_views.xml',
         'views/res_partner_views.xml',
+        'reports/library_book_reports.xml',
     ],
     'installable': True,
     'application': True,
